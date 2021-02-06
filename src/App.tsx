@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Button, FormControl, TextField } from "@material-ui/core";
+import { AddToPhotosSharp } from "@material-ui/icons";
 import { db } from "./firebase";
 
 // interface TaskData {
@@ -8,6 +10,12 @@ import { db } from "./firebase";
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState([{ id: "", title: "" }]);
+  const [input, setInput] = useState("");
+
+  const newTask = (e: React.MouseEvent<HTMLButtonElement>) => {
+    db.collection("tasks").add({ title: input });
+    setInput("");
+  };
 
   useEffect(() => {
     const onSub = db.collection("tasks").onSnapshot((snapshot) => {
@@ -25,8 +33,23 @@ const App: React.FC = () => {
 
   return (
     <div>
+      <FormControl>
+        <TextField
+          InputLabelProps={{
+            shrink: true,
+          }}
+          label="new task ?"
+          value={input}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setInput(e.target.value)
+          }
+        />
+      </FormControl>
+      <Button disabled={!input} onClick={newTask}>
+        <AddToPhotosSharp />
+      </Button>
       {tasks.map((task) => (
-        <p>{task.title}</p>
+        <p key={task.id}>{task.title}</p>
       ))}
     </div>
   );
