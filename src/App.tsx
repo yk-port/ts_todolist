@@ -4,11 +4,6 @@ import { AddToPhotosSharp } from "@material-ui/icons";
 import TaskItem from "./TaskItem";
 import { db } from "./firebase";
 
-// interface TaskData {
-//   id: string;
-//   title: string;
-// }
-
 const App: React.FC = () => {
   const [tasks, setTasks] = useState([{ id: "", title: "" }]);
   const [input, setInput] = useState("");
