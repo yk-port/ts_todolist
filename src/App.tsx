@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Button, FormControl, TextField } from "@material-ui/core";
+import { Button, FormControl, TextField, List } from "@material-ui/core";
 import { AddToPhotosSharp } from "@material-ui/icons";
+import TaskItem from "./TaskItem";
 import { db } from "./firebase";
 
 // interface TaskData {
@@ -45,12 +46,16 @@ const App: React.FC = () => {
           }
         />
       </FormControl>
+
       <Button disabled={!input} onClick={newTask}>
         <AddToPhotosSharp />
       </Button>
-      {tasks.map((task) => (
-        <p key={task.id}>{task.title}</p>
-      ))}
+
+      <List>
+        {tasks.map((task) => (
+          <TaskItem id={task.id} title={task.title} key={task.id} />
+        ))}
+      </List>
     </div>
   );
 };
