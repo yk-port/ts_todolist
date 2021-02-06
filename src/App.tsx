@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Button, FormControl, TextField, List } from "@material-ui/core";
-import { AddToPhotosSharp } from "@material-ui/icons";
 import TaskItem from "./TaskItem";
+import styles from "./App.module.css";
 import { db } from "./firebase";
+
+import { Button, FormControl, TextField, List } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+import { AddToPhotosSharp } from "@material-ui/icons";
+
+const useStyles = makeStyles({
+  field: {
+    marginTop: 30,
+    marginBottom: 20,
+  },
+  list: {
+    margin: "auto",
+    width: "40%",
+  },
+});
 
 const App: React.FC = () => {
   const [tasks, setTasks] = useState([{ id: "", title: "" }]);
   const [input, setInput] = useState("");
+
+  const classes = useStyles();
 
   const newTask = (e: React.MouseEvent<HTMLButtonElement>) => {
     db.collection("tasks").add({ title: input });
@@ -28,9 +44,10 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className={styles.app__root}>
       <FormControl>
         <TextField
+          className={classes.field}
           InputLabelProps={{
             shrink: true,
           }}
@@ -42,11 +59,11 @@ const App: React.FC = () => {
         />
       </FormControl>
 
-      <Button disabled={!input} onClick={newTask}>
+      <Button className={styles.app__icon} disabled={!input} onClick={newTask}>
         <AddToPhotosSharp />
       </Button>
 
-      <List>
+      <List className={classes.list}>
         {tasks.map((task) => (
           <TaskItem id={task.id} title={task.title} key={task.id} />
         ))}
