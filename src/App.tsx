@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import TaskItem from "./TaskItem";
 import styles from "./App.module.css";
-import { db } from "./firebase";
+import { db, auth } from "./firebase";
 
 import { Button, FormControl, TextField, List } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import { AddToPhotosSharp } from "@material-ui/icons";
+import { AddToPhotosSharp, ExitToAppSharp } from "@material-ui/icons";
 
 const useStyles = makeStyles({
   field: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   },
 });
 
-const App: React.FC = () => {
+const App: React.FC = (props: any) => {
   const [tasks, setTasks] = useState([{ id: "", title: "" }]);
   const [input, setInput] = useState("");
 
@@ -43,8 +43,30 @@ const App: React.FC = () => {
     return () => onSub();
   }, []);
 
+  useEffect(() => {
+    const unSub = auth.onAuthStateChanged((user) => {
+      !user && props.history.push("login");
+    });
+    return () => unSub();
+  });
+
   return (
     <div className={styles.app__root}>
+      <h1>Todo App</h1>
+      <button
+        className={styles.app__logout}
+        onClick={async () => {
+          try {
+            await auth.signOut();
+            props.history.push("/login");
+          } catch (error) {
+            alert(error.message);
+          }
+        }}
+      >
+        <ExitToAppSharp />
+      </button>
+      <br />
       <FormControl>
         <TextField
           className={classes.field}
